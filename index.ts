@@ -1,4 +1,4 @@
-import { placeOrder } from "./trade";
+import { getHolding, placeOrder } from "./trade";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -37,6 +37,17 @@ server.tool("sell-stock", "Sells the stocks on zerodha exhange platform for the 
     }
   }
 )
+
+server.tool("show-portfolio", "Shows my complete portfolio in zerodha",
+  { },
+  async () =>{
+    return {
+      content: [{type:"text",text: await getHolding() }]
+    }
+  }
+)
+
+
 
 // This means that Claude and our application exists on the same machine itself so thus comes Stdio
 const transport = new StdioServerTransport();

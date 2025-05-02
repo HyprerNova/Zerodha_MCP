@@ -24,3 +24,13 @@ export async function placeOrder(tradingsymbol: string, quantity: number, type: 
   }
 }
 
+export async function getHolding(){
+  const holding = await kc.getHoldings();
+  let allHolding = "";
+  holding.map(hold =>{
+    allHolding += `stock: ${hold.tradingsymbol}, qty: ${hold.quantity}, currentPrice : ${hold.last_price}`
+  }) 
+
+  return allHolding;
+}
+
