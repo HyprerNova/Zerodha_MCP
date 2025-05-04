@@ -1,12 +1,16 @@
 import { KiteConnect } from "kiteconnect";
+import dotenv from 'dotenv';
+dotenv.config();
 
-const apiKey = "r04b6rh4v92aq1l6";
-let access_token = "pT8XLMMRrYElbRlRstFZ7T4cIGTlRvEO"
+// ! ensures non-null assertionss
+const apiKey = process.env.API_KEY!;
+let access_token = process.env.ACCESS_TOKEN!;
 
 const kc = new KiteConnect({ api_key: apiKey });
 kc.setAccessToken(access_token);
 
 console.log(kc.getLoginURL());
+
 
 export async function placeOrder(
   tradingsymbol: string,

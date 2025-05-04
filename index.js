@@ -28,9 +28,6 @@ server.tool("show-portfolio", "Shows my complete portfolio in zerodha", {}, asyn
         content: [{ type: "text", text: await getHolding() }]
     };
 });
-
 // This means that Claude and our application exists on the same machine itself so thus comes Stdio
 const transport = new StdioServerTransport();
 await server.connect(transport);
-
-
