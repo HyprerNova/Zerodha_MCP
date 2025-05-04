@@ -5,7 +5,7 @@ Before setting up the MCP server, ensure you have the following:
 
 Node.js: Install Node.js from nodejs.org.
 Zerodha Developer App: Create an app on Zerodha's Developer Portal to obtain your API key and secret.
-Access Token: Generate an access token for your Zerodha account. Refer to this YouTube tutorial for step-by-step instructions : https://youtu.be/1iJ34tTjwwo?si=b-lPtW4YZnt_5jtQ
+Access Token: Generate an access token for your Zerodha account. Refer to this YouTube tutorial for step-by-step instructions.
 
 Installation
 
@@ -56,9 +56,3 @@ Refer to Zerodha's documentation for rate limits and API usage guidelines.
 
 License
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-
-Links:
-
-https://github.com/zerodha/kiteconnectjs
-https://github.com/modelcontextprotocol/typescript-sd
