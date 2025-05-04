@@ -15,8 +15,8 @@ Before setting up the MCP server, ensure you have the following:
 
 Clone this repository:
 ```
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/kingnavneeth094/Zerodha-MCP.git
+cd Zerodha-MCP
 ```
 
 Install dependencies:
