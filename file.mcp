@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "trader": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",      
+      "args": ["C:\\Projects\\mcp-servers\\zero\\index.js"]
+    },
+  }
+}
