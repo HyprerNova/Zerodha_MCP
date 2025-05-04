@@ -1,4 +1,5 @@
 ***Zerodha Trading MCP Server***
+<!-- -->
 This project implements a Model Context Protocol (MCP) server for trading on the Zerodha platform using the KiteConnect API. The server allows users to execute buy and sell stock commands programmatically.
 
 **Prerequisites**
