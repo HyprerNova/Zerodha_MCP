@@ -1,2 +1,4 @@
-import { placeOrder } from "./trade.js";
-placeOrder("ONGC", 1, "BUY");
+import { getHolding, placeOrder } from "./trade.js";
+//placeOrder('BAJAJHFL',1,'BUY');
+
+getHolding();

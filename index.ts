@@ -18,7 +18,7 @@ server.tool("add",
 );
 
 server.tool("buy-stock", "Buys the stocks on zerodha exchange for the user. It executes a real order for the user on the exchange platform",
-  {stock: z.string(),qty:z.number()},
+  {variety: z.string(), stock: z.string(),qty:z.number()},
   async({stock,qty})=>{
     placeOrder(stock,qty,"BUY");
     return {

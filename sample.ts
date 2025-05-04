@@ -1,3 +1,3 @@
-import { placeOrder } from "./trade";
+import { getHolding,placeOrder } from "./trade";
 
-placeOrder("ONGC",1,"BUY");
+getHolding();
