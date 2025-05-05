@@ -52,19 +52,23 @@ export async function placeMutualFundOrder(
   type: "BUY" | "SELL",
   quantity: number,
   amount: number
-) {
+): Promise<number | undefined> {
   try {
     const orderParams = {
       tradingsymbol,
       transaction_type: type,
       ...(type === "BUY" ? { amount } : { quantity }),
     };
+
     const response = await kc.placeMFOrder(orderParams);
     console.log("Order placed successfully:", response.order_id);
+    return response.order_id;
   } catch (err) {
     console.error("Failed to place MF order:", err);
+    return undefined;
   }
 }
+
 
 
 export async function canceStocklOrder(

@@ -1,4 +1,4 @@
-import { canceStocklOrder, getHolding, placeOrder } from "./trade";
+import { canceStocklOrder, getHolding, placeMutualFundOrder, placeOrder } from "./trade.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -68,6 +68,38 @@ server.tool("cancel-stock-order", "Cancels the order of the stock on Zerodha", {
             content: [
                 { type: "text", text: `Failed to cancel stock order. Error: ${err}` }
             ]
+        };
+    }
+});
+server.tool("buy-mf", "Places a BUY mutual fund order on Zerodha.", {
+    tradingsymbol: z.string(),
+    amount: z.number().min(1, "Amount must be a positive number"),
+}, async ({ tradingsymbol, amount }) => {
+    try {
+        const order_id = await placeMutualFundOrder(tradingsymbol, "BUY", 0, amount);
+        return {
+            content: [{ type: "text", text: `BUY Mutual Fund order placed. Order ID: ${order_id}` }],
+        };
+    }
+    catch (err) {
+        return {
+            content: [{ type: "text", text: `Error placing BUY Mutual Fund order: ${err.message}` }],
+        };
+    }
+});
+server.tool("sell-mf", "Places a SELL mutual fund order on Zerodha.", {
+    tradingsymbol: z.string(),
+    quantity: z.number().min(1, "Quantity must be a positive number"),
+}, async ({ tradingsymbol, quantity }) => {
+    try {
+        const order_id = await placeMutualFundOrder(tradingsymbol, "SELL", quantity, 0);
+        return {
+            content: [{ type: "text", text: `SELL Mutual Fund order placed. Order ID: ${order_id}` }],
+        };
+    }
+    catch (err) {
+        return {
+            content: [{ type: "text", text: `Error placing SELL Mutual Fund order: ${err.message}` }],
         };
     }
 });
