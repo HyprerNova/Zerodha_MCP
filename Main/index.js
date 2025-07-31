@@ -1,4 +1,4 @@
-import { canceStocklOrder, getHolding, placeMutualFundOrder, placeOrder } from "./trade.js";
+import { canceStocklOrder, getStockHolding, placeMutualFundOrder, placeOrder, MF_holdings, getTrigger } from "./trade.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -50,9 +50,35 @@ server.tool("sell-stock", "Sells the stocks on Zerodha exchange platform for the
     }
 });
 server.tool("show-portfolio", "Shows my complete portfolio in zerodha", {}, async () => {
-    const holdings = await getHolding();
+    const holdings = await getStockHolding();
+    let totalProfit = 0;
+    let totalInvested = 0;
+    const tableData = holdings.map(stock => {
+        totalProfit += stock.pnl;
+        const invested = stock.average_price * stock.quantity;
+        totalInvested += invested;
+        const profitPercent = invested !== 0 ? (stock.pnl / invested) * 100 : 0;
+        return {
+            Name: stock.tradingsymbol,
+            Value: stock.last_price,
+            Quantity: stock.quantity,
+            'Purchase Value': stock.average_price,
+            Profit: stock.pnl,
+            'Profit %': profitPercent.toFixed(2)
+        };
+    });
+    const totalProfitPercent = totalInvested !== 0 ? (totalProfit / totalInvested) * 100 : 0;
+    // Convert tableData to a string table for text response
+    const tableString = [
+        '| Name      | Value     | Quantity | Purchase Value | Profit    | Profit % |',
+        '|-----------|-----------|----------|---------------|-----------|----------|',
+        ...tableData.map(row => `| ${row.Name} | ${row.Value} | ${row.Quantity} | ${row['Purchase Value']} | ${row.Profit} | ${row['Profit %']} |`),
+        '',
+        `Total Profit: ${totalProfit}`,
+        `Total Profit %: ${totalProfitPercent.toFixed(2)}`
+    ].join('\n');
     return {
-        content: [{ type: "text", text: holdings }]
+        content: [{ type: "text", text: tableString }]
     };
 });
 server.tool("cancel-stock-order", "Cancels the order of the stock on Zerodha", { variety: z.enum(['amo', 'regular']), order_id: z.union([z.number(), z.string()]) }, async ({ variety, order_id }) => {
@@ -100,6 +126,26 @@ server.tool("sell-mf", "Places a SELL mutual fund order on Zerodha.", {
     catch (err) {
         return {
             content: [{ type: "text", text: `Error placing SELL Mutual Fund order: ${err.message}` }],
+        };
+    }
+});
+server.tool("show-mf-holdings", "Shows the holdings of the mutual funds on Zerodha", {}, async () => {
+    const holdings = await MF_holdings();
+    return {
+        content: [{ type: "text", text: holdings }]
+    };
+});
+server.tool("get-trigger", "Get a GTT (trigger) by its ID", {
+    trigger_id: z.union([z.number(), z.string()])
+}, async ({ trigger_id }) => {
+    try {
+        const trigger = await getTrigger(trigger_id);
+        return {
+            content: [{ type: "text", text: JSON.stringify(trigger, null, 2) }]
+        };
+    } catch (err) {
+        return {
+            content: [{ type: "text", text: `Failed to get trigger. Error: ${err.message || err}` }]
         };
     }
 });
