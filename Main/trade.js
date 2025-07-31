@@ -6,7 +6,7 @@ const apiKey = process.env.API_KEY;
 let access_token = process.env.ACCESS_TOKEN;
 const kc = new KiteConnect({ api_key: apiKey });
 kc.setAccessToken(access_token);
-console.log(kc.getLoginURL());
+
 export async function placeOrder(ordertype, tradingsymbol, quantity, type) {
     try {
         const response = await kc.placeOrder(ordertype, {
@@ -17,7 +17,6 @@ export async function placeOrder(ordertype, tradingsymbol, quantity, type) {
             product: "CNC",
             order_type: "MARKET",
         });
-        console.log("Order placed successfully:", response.order_id);
         return response.order_id; // ✅ Return the order ID
     }
     catch (err) {
@@ -25,20 +24,20 @@ export async function placeOrder(ordertype, tradingsymbol, quantity, type) {
         throw new Error("Order placement failed"); // ✅ Rethrow to allow caller to handle
     }
 }
-export async function getHolding() {
-    const holdings = await kc.getPositions();
-    console.log(holdings);
-    let allHoldings = "";
-    holdings.net.map((holding) => {
-        allHoldings += `stock: ${holding.tradingsymbol}, qty: ${holding.quantity}, currentPrice : ${holding.last_price}`;
-    });
-    return allHoldings;
+export async function getStockHolding() {
+    try {
+        const holdings = await kc.getHoldings();
+        return holdings;
+    }
+    catch(err) {
+        console.error(err);
+        throw new Error('Failed to get portfolio holdings');
+    }
 }
 export async function placeMutualFundOrder(tradingsymbol, type, quantity, amount) {
     try {
         const orderParams = Object.assign({ tradingsymbol, transaction_type: type }, (type === "BUY" ? { amount } : { quantity }));
         const response = await kc.placeMFOrder(orderParams);
-        console.log("Order placed successfully:", response.order_id);
         return response.order_id;
     }
     catch (err) {
@@ -49,11 +48,31 @@ export async function placeMutualFundOrder(tradingsymbol, type, quantity, amount
 export async function canceStocklOrder(variety, order_id) {
     try {
         const response = await kc.cancelOrder(variety, order_id);
-        console.log(response.order_id);
         return { order_id: response.order_id }; // Return the order_id
     }
     catch (err) {
         console.error(err); // Log the error
         throw new Error('Failed to cancel order');
+    }
+}
+
+export async function MF_holdings() {
+    try{
+        const response = await kc.getMFHoldings();
+        return response;
+    }
+    catch(err){
+        console.error(err);
+        throw new Error('Failed to get MF holdings');
+    }
+}
+
+export async function getTrigger(trigger_id) {
+    try {
+        const response = await kc.getGTT(trigger_id);
+        return response;
+    } catch (err) {
+        console.error(err);
+        throw new Error('Failed to get trigger');
     }
 }

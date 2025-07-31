@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const apiKey = process.env.API_KEY;
 const apiSecret = process.env.API_SECRET;
-const requestToken = "kzaDPLUM8nqD518JFVNw14Q7p424F92Q"; // get this from login url and then parse this to get the access token
+const requestToken = process.env.REQUEST_TOKEN; // get this from login url and then parse this to get the access token
 const kc = new KiteConnect({ api_key: apiKey });
 console.log(kc.getLoginURL());
 async function init() {
